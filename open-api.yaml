@@ -1,0 +1,104 @@
+openapi: 3.0.4
+info:
+  title: INES Pokemon Microservice - OpenAPI 1.0
+  description: |-
+    This is a sample Pokemon Microservice based on the OpenAPI 3.0 specification.
+  contact:
+    email: ulysse.holzinger@etu.mines-ales.fr
+  version: 1.0.0
+externalDocs:
+  description: Find out more about Pokemon Microservice
+  url: https://github.com/INES-Architecture-Middleware/INES-MS-Pokemon/blob/main/README.md
+servers:
+  - url: https://localhost/api/v1
+tags:
+  - name: pokemon
+    description: Everything about Pokemons
+paths:
+  /pokemon:
+    get:
+      tags:
+        - pokemon
+      summary: Find Pokemon by id or name.
+      description: |
+        Find Pokemon in external PokéAPI API by **either** id **or** name.
+        You must provide exactly one query parameter: `id` or `name`, not both.
+      operationId: findPokemon
+      parameters:
+        - name: id
+          in: query
+          description: Id of the pokemon to fetch.
+          required: false
+          schema:
+            type: integer
+        - name: name
+          in: query
+          description: Name of the pokemon to fetch.
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pokemon'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Pokemon'
+        '400':
+          description: Invalid request - must provide exactly one of id or name.
+        '404':
+          description: Pokemon not found
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+components:
+  schemas:
+    Pokemon:
+      type: object
+      required:
+        - name
+        - pokeapi_id
+        - types
+        - image
+      properties:
+        pokeapi_id:
+          type: integer
+          description: The id of the Pokemon in PokéAPI
+          example: 25
+        name:
+          type: string
+          description: The name of the Pokemon
+          example: pikachu
+        types:
+          type: array
+          description: Types of the Pokemon
+          items:
+            type: string
+            example: electric
+        image:
+          type: string
+          description: URL of the Pokemon's image
+          example: https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png
+      xml:
+        name: Pokemon
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: api_key
+      in: header

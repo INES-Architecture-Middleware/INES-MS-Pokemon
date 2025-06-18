@@ -1,0 +1,16 @@
+meta {
+  name: Get all Pokemons with pagination
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/pokemon
+  body: none
+  auth: none
+}
+
+params:query {
+  offset: 
+  ~limit: 
+}

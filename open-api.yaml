@@ -19,27 +19,67 @@ paths:
     get:
       tags:
         - pokemon
-      summary: Find Pokemon by id or name.
-      description: |
-        Find Pokemon in external PokéAPI API by **either** id **or** name.
-        You must provide exactly one query parameter: `id` or `name`, not both.
-      operationId: findPokemon
+      summary: Get all Pokemons with pagination
+      description: Returns a paginated list of Pokemons.
+      operationId: getAllPokemons
       parameters:
-        - name: id
+        - name: offset
           in: query
-          description: Id of the pokemon to fetch.
+          description: Number of items to skip before starting to collect the result set.
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+            example: 0
+        - name: limit
+          in: query
+          description: Maximum number of items to return (default 50).
           required: false
           schema:
             type: integer
-        - name: name
-          in: query
-          description: Name of the pokemon to fetch.
-          required: false
-          schema:
-            type: string
+            minimum: 1
+            default: 50
+            example: 50
       responses:
         '200':
-          description: successful operation
+          description: A paginated list of Pokemons
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pokemon'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pokemon'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /pokemon/{id}:
+    get:
+      tags:
+        - pokemon
+      summary: Get Pokemon by ID
+      description: Returns a single Pokemon by its PokéAPI ID.
+      operationId: getPokemonById
+      parameters:
+        - name: id
+          in: path
+          description: ID of the Pokemon to fetch.
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            example: 25
+      responses:
+        '200':
+          description: Successful operation
           content:
             application/json:
               schema:
@@ -47,8 +87,6 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/Pokemon'
-        '400':
-          description: Invalid request - must provide exactly one of id or name.
         '404':
           description: Pokemon not found
         default:
@@ -57,6 +95,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+
 components:
   schemas:
     Pokemon:
@@ -87,6 +126,7 @@ components:
           example: https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png
       xml:
         name: Pokemon
+
     Error:
       type: object
       required:
@@ -97,6 +137,7 @@ components:
           type: string
         message:
           type: string
+
   securitySchemes:
     api_key:
       type: apiKey

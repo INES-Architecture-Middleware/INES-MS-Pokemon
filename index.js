@@ -23,6 +23,14 @@ process.on('SIGINT', async () => {
 
 const paginateResults = (data, page) => {
     const pageSize = parseInt(paginationSize, 10);
+    if (!Array.isArray(data) || data.length === 0) {
+        return {
+            page: 0,
+            pageSize: 0,
+            total: 0,
+            data: []
+        };
+    }
     if (data.length <= pageSize) {
         return {
             page: 0,

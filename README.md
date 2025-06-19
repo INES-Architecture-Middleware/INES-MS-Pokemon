@@ -10,6 +10,7 @@ REDIS_URL=redis://localhost:6379
 CACHE_TTL=86400
 CACHE_REFRESH_HOURS=72
 REDIS_HOST=redis
+PAGINATION_SIZE=50
 ```
 
 ## Start the Redis Server

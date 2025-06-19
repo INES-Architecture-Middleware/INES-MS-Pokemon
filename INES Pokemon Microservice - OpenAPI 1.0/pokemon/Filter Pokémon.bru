@@ -1,0 +1,20 @@
+meta {
+  name: Filter Pokémon
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://localhost:3001/pokemon/filter/0
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name":"dia",
+    "colors":[],
+    "types":["dragon"],
+    "generations":[2,4]
+  }
+}

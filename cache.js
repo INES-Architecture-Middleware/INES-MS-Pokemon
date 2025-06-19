@@ -2,6 +2,8 @@ const frenchTranslations = require('./frenchTranslations.json');
 const redisService = require('./redis.service');
 const axios = require('axios');
 
+const CACHE_REFRESH_HOURS = process.env.CACHE_REFRESH_HOURS ? parseInt(process.env.CACHE_REFRESH_HOURS) : 24;
+
 const generationToDecimal = {
     'i': 1,
     'ii': 2,

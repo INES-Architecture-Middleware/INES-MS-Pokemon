@@ -1,17 +1,18 @@
 # Pokemon Microservice
 
-## Configuration du fichier `.env`
+## `.env` File Configuration
 
-Créez un fichier `.env` à la racine du projet avec le contenu suivant :
+Create a `.env` file at the root of the project with the following content:
 
 ```env
 REDIS_URL=redis://localhost:6379
 CACHE_TTL=86400
+CACHE_REFRESH_HOURS=72
 ```
 
-## Démarrer le serveur Redis
+## Start the Redis Server
 
-Assurez-vous que le service Redis est activé et démarré :
+Make sure the Redis service is enabled and started:
 
 ```bash
 sudo systemctl enable redis-server

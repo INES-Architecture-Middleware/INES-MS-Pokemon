@@ -7,7 +7,16 @@ class RedisService {
         }
 
         this.client = createClient({
-            url: process.env.REDIS_URL || 'redis://localhost:6379'
+            url: process.env.REDIS_URL || 'redis://redis:6379',
+            socket: {
+                reconnectStrategy: (retries) => {
+                if (retries > 5) {
+                    console.log('Trop de tentatives de reconnexion à Redis');
+                    return new Error('Max retries reached');
+                }
+                return Math.min(retries * 100, 5000);
+                }
+            }
         });
 
         this.connectionPromise = null;

@@ -1,18 +1,25 @@
 require('dotenv').config();
 const express = require('express');
-const axios = require('axios');
 const app = express();
 const { initializeCache, loadAllPokemonData } = require('./cache');
 const redisService = require('./redis.service');
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 app.use(express.json());
 
 
-
-
 initializeCache();
+
+process.on('SIGTERM', async () => {
+  await redisService.client.quit();
+  process.exit(0);
+});
+
+process.on('SIGINT', async () => {
+  await redisService.client.quit();
+  process.exit(0);
+});
 
 app.get('/pokemon/all', async (req, res) => {
     try {

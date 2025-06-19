@@ -81,6 +81,8 @@ app.post('/pokemon/filter/:pageId', async (req, res) => {
 
     const cachedData = await redisService.get('pokemon:all');
 
+    const { pageId } = req.params || 0;
+
     if(!cachedData) {
         return res.status(503).json({ error: "Données non encore chargées" });
     }
@@ -91,7 +93,7 @@ app.post('/pokemon/filter/:pageId', async (req, res) => {
     }
     else {
         const { name, colors, types, generations} = req.body;
-        const { pageId } = req.params || 0;
+        
 
         try {
             const filteredPokemon = JSON.parse(cachedData);

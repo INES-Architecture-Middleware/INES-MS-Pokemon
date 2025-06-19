@@ -51,6 +51,7 @@ app.get('/pokemon/all', async (req, res) => {
             res.status(503).json({ error: "Données non encore chargées" });
         }
     } catch (error) {
+        console.log("error")
         res.status(500).json({ error: "Internal server error" });
     }
 });

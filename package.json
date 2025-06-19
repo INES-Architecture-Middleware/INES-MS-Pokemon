@@ -1,0 +1,26 @@
+{
+  "name": "ines-ms-pokemon",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/INES-Architecture-Middleware/INES-MS-Pokemon.git"
+  },
+  "author": "Ulysse HOLZINGER",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/INES-Architecture-Middleware/INES-MS-Pokemon/issues"
+  },
+  "homepage": "https://github.com/INES-Architecture-Middleware/INES-MS-Pokemon#readme",
+  "dependencies": {
+    "axios": "^1.10.0",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "redis": "^5.5.6"
+  }
+}

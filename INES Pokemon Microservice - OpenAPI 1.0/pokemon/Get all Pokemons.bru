@@ -1,16 +1,15 @@
 meta {
-  name: Get all Pokemons with pagination
+  name: Get all Pokemons
   type: http
   seq: 1
 }
 
 get {
-  url: {{baseUrl}}/pokemon
+  url: http://localhost:3000/pokemon/all
   body: none
   auth: none
 }
 
 params:query {
-  offset: 
   ~limit: 
 }

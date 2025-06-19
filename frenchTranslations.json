@@ -1,0 +1,80 @@
+
+{
+  "colors": {
+    "black": "Noir",
+    "blue": "Bleu",
+    "brown": "Marron",
+    "gray": "Gris",
+    "green": "Vert",
+    "pink": "Rose",
+    "purple": "Violet",
+    "red": "Rouge",
+    "white": "Blanc",
+    "yellow": "Jaune"
+  },
+  "types": {
+    "normal": "Normal",
+    "fire": "Feu",
+    "water": "Eau",
+    "electric": "Électrik",
+    "grass": "Plante",
+    "ice": "Glace",
+    "fighting": "Combat",
+    "poison": "Poison",
+    "ground": "Sol",
+    "flying": "Vol",
+    "psychic": "Psy",
+    "bug": "Insecte",
+    "rock": "Roche",
+    "ghost": "Spectre",
+    "dragon": "Dragon",
+    "dark": "Ténèbres",
+    "steel": "Acier",
+    "fairy": "Fée"
+  },
+  "egg_groups": {
+    "monster": "Monstre",
+    "water1": "Aquatique 1",
+    "water2": "Aquatique 2",
+    "water3": "Aquatique 3",
+    "bug": "Insectoïde",
+    "flying": "Aérien",
+    "ground": "Terrestre",
+    "fairy": "Féérique",
+    "plant": "Végétal",
+    "humanshape": "Humanoïde",
+    "mineral": "Minéral",
+    "indeterminate": "Amorphe",
+    "ditto": "Métamorphe",
+    "dragon": "Draconique",
+    "no-eggs": "Sans Groupe"
+  },
+  "categories": {
+    "seed": "Graine",
+    "lizard": "Lézard",
+    "flame": "Flamme",
+    "tiny_turtle": "Minitortue",
+    "turtle": "Tortue",
+    "shellfish": "Crustacé",
+    "worm": "Ver",
+    "cocoon": "Cocon",
+    "butterfly": "Papillon",
+    "mouse": "Souris",
+    "beak": "Bec",
+    "snake": "Serpent",
+    "poison_pin": "Dard-Venin",
+    "drill": "Perceur",
+    "fairy": "Fée",
+    "fox": "Renard",
+    "balloon": "Ballon"
+  },
+  "stats": {
+    "hp": "PV",
+    "attack": "Attaque",
+    "defense": "Défense",
+    "special-attack": "Attaque Spé.",
+    "special-defense": "Défense Spé.",
+    "speed": "Vitesse"
+  }
+}
+

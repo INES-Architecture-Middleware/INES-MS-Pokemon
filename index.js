@@ -97,7 +97,8 @@ app.post('/pokemon/filter/:pageId', async (req, res) => {
     }
 
     if(!req.body) {
-        const allPokemon = JSON.parse(cachedData);
+        const redisParse = JSON.parse(cachedData);
+        const allPokemon = Object.values(redisParse);
         res.json(paginateResults(allPokemon, pageId));
     }
     else {

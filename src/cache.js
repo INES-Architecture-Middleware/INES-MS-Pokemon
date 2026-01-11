@@ -1,4 +1,4 @@
-const frenchTranslations = require('./frenchTranslations.json');
+const frenchTranslations = require('./data/frenchTranslations.json');
 const redisService = require('./redis.service');
 const axios = require('axios');
 

@@ -4,18 +4,15 @@ services:
   app:
     build: .
     ports:
-      - "3001:3000"  # Port externe 3001 → Port interne 3000
-    environment:
-      - PORT=3000    # Gardez 3000 en interne
-      - REDIS_URL=redis://redis:6379
+      - "3123:3000"  # Port externe 3123 → Port interne 3000
+    env_file:
+      - .env
     depends_on:
       - redis
-    restart: unless-stopped
+    # restart: unless-stopped
 
   redis:
     image: redis:7-alpine
-    ports:
-      - "6379:6379"
     volumes:
       - redis_data:/data
     restart: unless-stopped

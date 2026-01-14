@@ -16,9 +16,9 @@ const generationToDecimal = {
     'ix': 9
 };
 
-const getFrenchName = (names, englishName, category = 'types') => {
+const getName = (names, lang, englishName, category = 'types') => {
     if (names) {
-        const frenchEntry = names.find(entry => entry.language.name === 'fr');
+        const frenchEntry = names.find(entry => entry.language.name === (lang || 'fr'));
         if (frenchEntry) return frenchEntry.name;
     }
     
@@ -64,25 +64,39 @@ const loadAllPokemonData = async () => {
         const pokemonList = listResponse.data.results;
         
         const allPokemonData = {};
+        const allAbilities = {}
         
         for (const [index, pokemon] of pokemonList.entries()) {
             try {
                 const pokemonResponse = await axios.get(pokemon.url);
                 const speciesResponse = await axios.get(pokemonResponse.data.species.url);
                 
+                if(pokemonResponse.data.abilities){
+                    for(const ab of pokemonResponse.data.abilities){
+                        const ability = ab.ability
+                        if(!allAbilities[ability.name]){
+                            const abilityResponse = await axios.get(ability.url);
+                            allAbilities[ability.name] = {
+                                fr:getName(abilityResponse.data.names, 'fr'),
+                                en:getName(abilityResponse.data.names, 'en')
+                            }
+                        }
+                    }
+                }
+                
                 allPokemonData[pokemonResponse.data.id] = {
                     id: pokemonResponse.data.id,
                     names: {
-                        fr: getFrenchName(speciesResponse.data.names),
-                        en: speciesResponse.data.name
+                        fr: getName(speciesResponse.data.names, 'fr'),
+                        en: getName(speciesResponse.data.names, 'en')
                     },
                     sprites: {
                         front_default: pokemonResponse.data.sprites.front_default,
                         official_artwork: pokemonResponse.data.sprites.other['official-artwork']?.front_default
                     },
                     color: {
-                        fr: getFrenchName(speciesResponse.data.color?.names, speciesResponse.data.color?.name, 'colors'),
-                        en: speciesResponse.data.color?.name
+                        fr: getName(speciesResponse.data.color?.names, 'fr', speciesResponse.data.color?.name, 'colors'),
+                        en: getName(speciesResponse.data.color?.names, 'en', speciesResponse.data.color?.name, 'colors')
                     },
                     generation: generationToDecimal[speciesResponse.data.generation?.name.replace('generation-', '')] || 0,
                     weight: pokemonResponse.data.weight / 10,
@@ -96,17 +110,21 @@ const loadAllPokemonData = async () => {
                         speed: pokemonResponse.data.stats[5]?.base_stat
                     },
                     types: pokemonResponse.data.types.map(type => ({
-                        fr: getFrenchName(type.type?.names, type.type?.name, 'types'),
+                        fr: getName(type.type?.names, 'fr', type.type?.name, 'types'),
                         en: type.type?.name
                     })),
                     abilities: pokemonResponse.data.abilities.map(ability => ({
-                        fr: getFrenchName(ability.ability?.names, ability.ability?.name, 'abilities'),
-                        en: ability.ability?.name
+                        fr: allAbilities[ability.ability.name]?.fr,
+                        en: allAbilities[ability.ability.name]?.en  
                     })),
                     egg_groups: speciesResponse.data.egg_groups.map(group => ({
-                        fr: getFrenchName(group.names, group.name, 'egg_groups'),
-                        en: group.name
+                        fr: getName(group.names, 'fr', group.name, 'egg_groups'),
+                        en: getName(group.names, 'en', group.name, 'egg_groups')
                     })),
+                    category:{
+                        fr:speciesResponse.data.genera.find(gen => gen.language.name === "fr").genus,
+                        en:speciesResponse.data.genera.find(gen => gen.language.name === "en").genus,
+                    }
                 };
                 
                 if (index % 50 === 0) {

@@ -9,7 +9,7 @@ services:
       - .env
     depends_on:
       - redis
-    # restart: unless-stopped
+    restart: unless-stopped
 
   redis:
     image: redis:7-alpine

@@ -16,6 +16,12 @@ class PokemonRouter {
       .get(requestDetails, authenticate, async (req, res) => {
         await pokemonController.reloadCache(req, res);
       })
+
+    this.router
+      .route('/list')
+      .post(requestDetails, authenticate, async (req, res) => {
+        await pokemonController.getList(req, res);
+      })
     
     this.router
       .route('/:id')

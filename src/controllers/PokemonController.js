@@ -157,6 +157,34 @@ class PokemonController {
             res.status(500).json({ error: "Erreur lors du rechargement" });
         }
     }
+
+    async getList(req, res){
+        if(!req.body.ids || req.body.ids.length === 0){
+            res.sendStatus(500)
+            return
+        }
+
+        try{
+            const cachedData = await redisService.get('pokemon:all');
+            if(!cachedData){
+                res.sendStatus(500)
+                return
+            }
+
+            const data = JSON.parse(cachedData);
+            const pokemons = []
+            for(const id of req.body.ids){
+                if(data[id]) pokemons.push(data[id])
+            }
+
+            res.json(pokemons)
+            return
+        }catch(err){
+            console.log("Error : ", err)
+            res.sendStatus(500)
+            return
+        }
+    }
 }
 
 module.exports = PokemonController

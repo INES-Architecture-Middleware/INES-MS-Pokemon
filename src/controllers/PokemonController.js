@@ -185,6 +185,29 @@ class PokemonController {
             return
         }
     }
+
+    async getRandomTeam(req, res) {
+        try{
+            const cachedData = await redisService.get('pokemon:all');
+            if(!cachedData){
+                res.sendStatus(500)
+                return
+            }
+
+            const data = JSON.parse(cachedData)
+            const len = Object.keys(data).length
+            const team = []
+            for(let i = 0; i < 6; i++) {
+                const randomId = Math.floor(Math.random() * len)
+                team.push(data[Object.keys(data)[randomId]])
+            }
+            res.json(team)
+        }catch(err){
+            console.log(err)
+            res.sendStatus(500)
+            return
+        }
+    }
 }
 
 module.exports = PokemonController

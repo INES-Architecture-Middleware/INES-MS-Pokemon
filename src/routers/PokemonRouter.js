@@ -22,6 +22,12 @@ class PokemonRouter {
       .post(requestDetails, authenticate, async (req, res) => {
         await pokemonController.getList(req, res);
       })
+
+    this.router
+      .route('/random')
+      .get(requestDetails, authenticate, async (req, res) => {
+        await pokemonController.getRandomTeam(req, res);
+      })
     
     this.router
       .route('/:id')

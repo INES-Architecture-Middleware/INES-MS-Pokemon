@@ -38,13 +38,13 @@ const initializeCache = async () => {
         const cachedData = await redisService.get('pokemon:all');
         const lastUpdated = await redisService.get('pokemon:last_updated');
         
-        if (!cachedData || shouldRefreshCache(lastUpdated)) {
+        // if (!cachedData || shouldRefreshCache(lastUpdated)) {
             console.log('(Re)chargement des données Pokémon...');
             await loadAllPokemonData();
             await redisService.set('pokemon:last_updated', Date.now());
-        } else {
-            console.log('Utilisation des données Pokémon existantes dans Redis');
-        }
+        // } else {
+        //     console.log('Utilisation des données Pokémon existantes dans Redis');
+        // }
     } catch (error) {
         console.error('Erreur lors de l\'initialisation du cache:', error);
     }
@@ -69,67 +69,70 @@ const loadAllPokemonData = async () => {
         for (const [index, pokemon] of pokemonList.entries()) {
             try {
                 const pokemonResponse = await axios.get(pokemon.url);
-                const speciesResponse = await axios.get(pokemonResponse.data.species.url);
-                
-                if(pokemonResponse.data.abilities){
-                    for(const ab of pokemonResponse.data.abilities){
-                        const ability = ab.ability
-                        if(!allAbilities[ability.name]){
-                            const abilityResponse = await axios.get(ability.url);
-                            allAbilities[ability.name] = {
-                                fr:getName(abilityResponse.data.names, 'fr'),
-                                en:getName(abilityResponse.data.names, 'en')
+
+                if(pokemonResponse.data.is_default){
+                    const speciesResponse = await axios.get(pokemonResponse.data.species.url);
+                    
+                    if(pokemonResponse.data.abilities){
+                        for(const ab of pokemonResponse.data.abilities){
+                            const ability = ab.ability
+                            if(!allAbilities[ability.name]){
+                                const abilityResponse = await axios.get(ability.url);
+                                allAbilities[ability.name] = {
+                                    fr:getName(abilityResponse.data.names, 'fr'),
+                                    en:getName(abilityResponse.data.names, 'en')
+                                }
                             }
                         }
                     }
-                }
-                
-                allPokemonData[pokemonResponse.data.id] = {
-                    id: pokemonResponse.data.id,
-                    names: {
-                        fr: getName(speciesResponse.data.names, 'fr'),
-                        en: getName(speciesResponse.data.names, 'en')
-                    },
-                    sprites: {
-                        front_default: pokemonResponse.data.sprites.front_default,
-                        official_artwork: pokemonResponse.data.sprites.other['official-artwork']?.front_default
-                    },
-                    color: {
-                        fr: getName(speciesResponse.data.color?.names, 'fr', speciesResponse.data.color?.name, 'colors'),
-                        en: getName(speciesResponse.data.color?.names, 'en', speciesResponse.data.color?.name, 'colors')
-                    },
-                    generation: generationToDecimal[speciesResponse.data.generation?.name.replace('generation-', '')] || 0,
-                    weight: pokemonResponse.data.weight / 10,
-                    height: pokemonResponse.data.height / 10,
-                    stats: {
-                        hp: pokemonResponse.data.stats[0]?.base_stat,
-                        attack: pokemonResponse.data.stats[1]?.base_stat,
-                        defense: pokemonResponse.data.stats[2]?.base_stat,
-                        special_attack: pokemonResponse.data.stats[3]?.base_stat,
-                        special_defense: pokemonResponse.data.stats[4]?.base_stat,
-                        speed: pokemonResponse.data.stats[5]?.base_stat
-                    },
-                    types: pokemonResponse.data.types.map(type => ({
-                        fr: getName(type.type?.names, 'fr', type.type?.name, 'types'),
-                        en: type.type?.name
-                    })),
-                    abilities: pokemonResponse.data.abilities.map(ability => ({
-                        fr: allAbilities[ability.ability.name]?.fr,
-                        en: allAbilities[ability.ability.name]?.en  
-                    })),
-                    egg_groups: speciesResponse.data.egg_groups.map(group => ({
-                        fr: getName(group.names, 'fr', group.name, 'egg_groups'),
-                        en: getName(group.names, 'en', group.name, 'egg_groups')
-                    })),
-                    category:{
-                        fr:speciesResponse.data.genera.find(gen => gen.language.name === "fr").genus,
-                        en:speciesResponse.data.genera.find(gen => gen.language.name === "en").genus,
+                    
+                    allPokemonData[pokemonResponse.data.id] = {
+                        id: pokemonResponse.data.id,
+                        names: {
+                            fr: getName(speciesResponse.data.names, 'fr'),
+                            en: getName(speciesResponse.data.names, 'en')
+                        },
+                        sprites: {
+                            front_default: pokemonResponse.data.sprites.front_default,
+                            official_artwork: pokemonResponse.data.sprites.other['official-artwork']?.front_default
+                        },
+                        color: {
+                            fr: getName(speciesResponse.data.color?.names, 'fr', speciesResponse.data.color?.name, 'colors'),
+                            en: getName(speciesResponse.data.color?.names, 'en', speciesResponse.data.color?.name, 'colors')
+                        },
+                        generation: generationToDecimal[speciesResponse.data.generation?.name.replace('generation-', '')] || 0,
+                        weight: pokemonResponse.data.weight / 10,
+                        height: pokemonResponse.data.height / 10,
+                        stats: {
+                            hp: pokemonResponse.data.stats[0]?.base_stat,
+                            attack: pokemonResponse.data.stats[1]?.base_stat,
+                            defense: pokemonResponse.data.stats[2]?.base_stat,
+                            special_attack: pokemonResponse.data.stats[3]?.base_stat,
+                            special_defense: pokemonResponse.data.stats[4]?.base_stat,
+                            speed: pokemonResponse.data.stats[5]?.base_stat
+                        },
+                        types: pokemonResponse.data.types.map(type => ({
+                            fr: getName(type.type?.names, 'fr', type.type?.name, 'types'),
+                            en: type.type?.name
+                        })),
+                        abilities: pokemonResponse.data.abilities.map(ability => ({
+                            fr: allAbilities[ability.ability.name]?.fr,
+                            en: allAbilities[ability.ability.name]?.en  
+                        })),
+                        egg_groups: speciesResponse.data.egg_groups.map(group => ({
+                            fr: getName(group.names, 'fr', group.name, 'egg_groups'),
+                            en: getName(group.names, 'en', group.name, 'egg_groups')
+                        })),
+                        category:{
+                            fr:speciesResponse.data.genera.find(gen => gen.language.name === "fr").genus,
+                            en:speciesResponse.data.genera.find(gen => gen.language.name === "en").genus,
+                        }
+                    };
+                    
+                    if (index % 50 === 0) {
+                        await redisService.set('pokemon:all', JSON.stringify(allPokemonData));
+                        console.log(`Pokémons chargés: ${index + 1}/${pokemonList.length}`);
                     }
-                };
-                
-                if (index % 50 === 0) {
-                    await redisService.set('pokemon:all', JSON.stringify(allPokemonData));
-                    console.log(`Pokémons chargés: ${index + 1}/${pokemonList.length}`);
                 }
             } catch (error) {
                 console.error(`Erreur sur le Pokémon ${pokemon.url}:`, error.message);

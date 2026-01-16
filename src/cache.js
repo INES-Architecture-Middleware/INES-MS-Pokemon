@@ -38,13 +38,13 @@ const initializeCache = async () => {
         const cachedData = await redisService.get('pokemon:all');
         const lastUpdated = await redisService.get('pokemon:last_updated');
         
-        // if (!cachedData || shouldRefreshCache(lastUpdated)) {
+        if (!cachedData || shouldRefreshCache(lastUpdated)) {
             console.log('(Re)chargement des données Pokémon...');
             await loadAllPokemonData();
             await redisService.set('pokemon:last_updated', Date.now());
-        // } else {
-        //     console.log('Utilisation des données Pokémon existantes dans Redis');
-        // }
+        } else {
+            console.log('Utilisation des données Pokémon existantes dans Redis');
+        }
     } catch (error) {
         console.error('Erreur lors de l\'initialisation du cache:', error);
     }
